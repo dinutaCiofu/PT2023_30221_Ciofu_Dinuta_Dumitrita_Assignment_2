@@ -1,20 +1,20 @@
-package org.example.businessLogic;
+package org.example.business_logic;
 
 import org.example.model.Server;
 import org.example.model.Task;
 
 import java.util.List;
 
-public class ConcreteStrategyTime implements Strategy{
+public class ConcreteStrategyQueue implements Strategy{
     @Override
     public void addTask(List<Server> servers, Task t) {
         Integer ID = 0;
-        Integer waitingPeriod = 999;
+        Integer waitingTasks = 999;
 
         for(Server server : servers){
-            if(server.getWaitingPeriod() < waitingPeriod){
-                waitingPeriod=server.getWaitingPeriod();
-                ID=server.getID();
+            if(server.getWaitingTasks() < waitingTasks){
+                waitingTasks = server.getWaitingTasks();
+                ID = server.getID();
             }
         }
 

@@ -1,4 +1,4 @@
-package org.example.businessLogic;
+package org.example.business_logic;
 
 import org.example.model.Server;
 import org.example.model.Task;
@@ -19,7 +19,8 @@ public class Scheduler {
         this.threads = new ArrayList<Thread>(maxNoServers);
 
         for (int i = 0; i < maxNoServers; i++) {
-            servers.add(new Server(i, maxNoServers));
+            servers.add(new Server(i+1, maxNoServers));
+            //pentru fiecare coada pornim un fir de executie
             threads.add(new Thread(servers.get(i)));
             threads.get(i).start();
         }
@@ -38,7 +39,7 @@ public class Scheduler {
         }
     }
 
-    public Integer getMaxQueueWaitingPeriod(){
+    public Integer getPeakHour(){
         Integer maxWaitingPeriod = 0;
         for (Server server : servers){
             if(server.getWaitingPeriod() > maxWaitingPeriod){
@@ -65,8 +66,10 @@ public class Scheduler {
             }
         }
 
+        // adaugam task-ul la serverul cu cel mai mic timp de asteptare
         servers.get(minQueueID).addTask(t);
         if (servers.get(minQueueID).isOpen() != true) {
+            // marcam server-ul ca fiind deschis
             servers.get(minQueueID).setOpen(true);
             threads.set(minQueueID, new Thread(servers.get(minQueueID)));
             threads.get(minQueueID).start();

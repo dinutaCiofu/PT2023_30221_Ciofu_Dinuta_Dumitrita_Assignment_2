@@ -1,4 +1,4 @@
-package org.example.businessLogic;
+package org.example.business_logic;
 
 import org.example.model.Task;
 import org.example.single_point_access.GUIFrameSinglePointAccess;
@@ -26,6 +26,8 @@ public class SimulationManager implements Runnable {
     public Integer numberOfClients = 0;
     //
     private Integer avgTime = 0;
+    private Integer peakHour = 0;
+    private Integer avgServiceTime = 0;
     private File resultsFile;
     public SelectionPolicy selectionPolicy = SelectionPolicy.SHORTEST_TIME;
     //entitate responsabila cu management-ul cozilor si distribuirea clientilor
@@ -35,7 +37,7 @@ public class SimulationManager implements Runnable {
     //pool of tasks
     private List<Task> generatedTasks;
     private boolean validare = false;
-    private boolean isRunning; // flag pentru a indica daca simularea este in desfasurare
+    private boolean isRunning = false; // flag pentru a indica daca simularea este in desfasurare
 
     public SimulationManager(File output) {
         this.resultsFile = output;
@@ -51,7 +53,8 @@ public class SimulationManager implements Runnable {
         userInterface.getValidareBtn().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                validare = true;
+                isRunning = false;
+
                 String nbOfClientsStr = userInterface.getClientiTextField().getText();
                 String nbOfQueuesStr = userInterface.getCoziTextField().getText();
                 String simulationTimeStr = userInterface.getSimulareTextField().getText();
@@ -60,7 +63,13 @@ public class SimulationManager implements Runnable {
                 String minProcessingTimeStr = userInterface.getMinServireTextField().getText();
                 String maxProcessingTimeStr = userInterface.getMaxServireTextField().getText();
 
-                if (nbOfClientsStr != "" && nbOfQueuesStr != "" && simulationTimeStr != "" && minArrivalTimeStr != "" && maxArrivalTimeStr != "" && minProcessingTimeStr != "" && maxProcessingTimeStr != "") {
+//                if(nbOfClientsStr.isEmpty()){
+//                    System.out.println("wtf "+nbOfClientsStr);
+//                }
+
+                if (!nbOfClientsStr.isEmpty() && !nbOfQueuesStr.isEmpty() && !simulationTimeStr.isEmpty() && !minArrivalTimeStr.isEmpty() && !maxArrivalTimeStr.isEmpty() && !minProcessingTimeStr.isEmpty() && !maxProcessingTimeStr.isEmpty()) {
+                    validare = true;
+                    System.out.println("Ajunge aici");
                     numberOfClients = Integer.parseInt(nbOfClientsStr);
                     numberOfServers = Integer.parseInt(nbOfQueuesStr);
                     timeLimit = Integer.parseInt(simulationTimeStr);
@@ -69,6 +78,7 @@ public class SimulationManager implements Runnable {
                     minProcessingTime = Integer.parseInt(minProcessingTimeStr);
                     maxProcessingTime = Integer.parseInt(maxProcessingTimeStr);
                 } else {
+                    validare = false;
                     GUIFrameSinglePointAccess.showDialogMessage("Invalid input");
                 }
                 semaphore.release();
@@ -79,8 +89,13 @@ public class SimulationManager implements Runnable {
         userInterface.getStartBtn().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                isRunning = true;
-                startSemaphore.release();
+                if(validare == true){
+                    isRunning = true;
+                    startSemaphore.release();
+                }else{
+                    GUIFrameSinglePointAccess.showDialogMessage("Valideaza datele");
+                }
+
             }
         });
 
@@ -149,7 +164,7 @@ public class SimulationManager implements Runnable {
 
     private Integer getMaxWaitingTime(Integer maxWaitingTime) {
         if (generatedTasks.isEmpty()) {
-            maxWaitingTime = scheduler.getMaxQueueWaitingPeriod();
+            maxWaitingTime = scheduler.getPeakHour();
         } else {
             maxWaitingTime--;
         }
@@ -168,7 +183,6 @@ public class SimulationManager implements Runnable {
             }
 
             Integer currentTime = 0;
-            Integer nbOfProcessedClients = 1;
             Integer maxWaitingTimeTmp = 0;
 
             while (currentTime < timeLimit && (!generatedTasks.isEmpty() || maxWaitingTimeTmp > 0)) {
@@ -179,8 +193,9 @@ public class SimulationManager implements Runnable {
                     scheduler.dispatchTask(generatedTasks.get(0));
                     if (currentTime + generatedTasks.get(0).getServiceTime() < timeLimit) {
                         System.out.println("*******************************\nA intrat in if");
-                        nbOfProcessedClients++;
-                        avgTime += currentTime - generatedTasks.get(0).getArrivalTime();
+                        avgTime += generatedTasks.get(0).getArrivalTime();
+                        avgServiceTime += generatedTasks.get(0).getServiceTime();
+                        System.out.println("ln 184: avgTime is: " + avgTime);
                     }
                     generatedTasks.remove(0);
                 }
@@ -195,9 +210,17 @@ public class SimulationManager implements Runnable {
                     System.out.println("Exception from resultWriter");
                     System.out.println(ex.getMessage());
                 }
-
+                // timpul de asteptare maxim pentru ca un client sa intre intr-o coada
                 maxWaitingTimeTmp = getMaxWaitingTime(maxWaitingTimeTmp);
+                System.out.println("LN 202: maxWaitingTime " + maxWaitingTimeTmp);
                 currentTime++;
+                System.out.println("currentTime: " + currentTime);
+                if (maxWaitingTimeTmp < 0) {
+                    Integer temp = maxWaitingTimeTmp * (-1);
+                    if (temp == currentTime && temp > peakHour) {
+                        peakHour = temp;
+                    }
+                }
                 //wait an interval of 1 second
                 try {
                     Thread.sleep(1000);
@@ -207,11 +230,17 @@ public class SimulationManager implements Runnable {
                 }
             }
             scheduler.killThreads();
-            System.out.println("*********************************");
-            System.out.println("avgTime is " + avgTime);
-            System.out.println("Number of processed clients " + nbOfProcessedClients);
             try {
-                resultsWriter.write("Average waiting time: " + (avgTime / (nbOfProcessedClients-1)));
+                resultsWriter.write("Average waiting time: " + (avgTime / numberOfClients));
+                resultsWriter.write("Average service time: " + (avgServiceTime / numberOfClients));
+                resultsWriter.write("\nPeak hour: " + peakHour + "\n");
+                String peakHourStr = "\nPeak hour: " + peakHour + "\n";
+                String avgTimeStr = "Average waiting time: " + (avgTime / numberOfClients) + "\n";
+                String avgServiceTimeStr = "Average service time: " + (avgServiceTime / numberOfClients) + "\n";
+                userInterface.getResult().setText(userInterface.getResult().getText().concat(avgTimeStr));
+                userInterface.getResult().setText(userInterface.getResult().getText().concat(avgServiceTimeStr));
+                userInterface.getResult().setText(userInterface.getResult().getText().concat(peakHourStr));
+
             } catch (Exception ex) {
                 System.out.println("Exception from resultWriter");
                 System.out.println(ex.getMessage());

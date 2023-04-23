@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Server implements Runnable {
     private Integer ID;
     private BlockingQueue<Task> tasks;
-    //timpul de asteptare al ultimului client pana termina (durata cozii)
+    //durata cozii
     private AtomicInteger waitingPeriod;
     private boolean open = true;
     private Integer waitingTasks = 0;
@@ -16,14 +16,6 @@ public class Server implements Runnable {
         this.tasks = new ArrayBlockingQueue<Task>(N);
         this.waitingPeriod = new AtomicInteger(0);
         this.ID = ID;
-    }
-
-    public BlockingQueue<Task> getTasks() {
-        return tasks;
-    }
-
-    public void setTasks(BlockingQueue<Task> tasks) {
-        this.tasks = tasks;
     }
 
     public Integer getWaitingPeriod() {
@@ -36,7 +28,13 @@ public class Server implements Runnable {
 
     public void addTask(Task newTask) {
         tasks.add(newTask);
+        //increment the waiting period
         waitingPeriod.set(waitingPeriod.addAndGet(newTask.getServiceTime()));
+//        System.out.println("LN 40 Server: waitingPeriod is: "+waitingPeriod + " from server "+ this.ID);
+//        System.out.println("The tasks from server "+this.ID + " are: ");
+//        for (Task task : tasks){
+//            System.out.println(task.toString());
+//        }
     }
 
     public void setOpen(boolean open) {
@@ -59,25 +57,29 @@ public class Server implements Runnable {
                 try {
                     Integer clientServiceTime = tasks.peek().getServiceTime();
                     Thread.sleep(1000);
+                    // decrementeaza timpul de asteptare al cozii
                     waitingPeriod.set(waitingPeriod.decrementAndGet());
+                    // decrementeaza timpul de servire al clientului din coada
                     clientServiceTime--;
                     tasks.peek().setServiceTime(clientServiceTime);
 
+                    //daca un client a fost servit
                     if (clientServiceTime == 0) {
                         tasks.peek().setServiceTime(0);
                         tasks.poll(); // extrage un client din coada si il elimina din coada
                     }
                 } catch (Exception ex) {
-
+                    System.out.println("Ceva eroare pe aici, of");
                 }
             }
+            // dupa ce am procesat toti clientii, inchidem coada
             setOpen(false);
         }
     }
 
 
     public String toString(){
-        if(tasks.peek()==null || getTasks().isEmpty() || tasks.peek().getServiceTime()==0){
+        if(tasks.peek()==null || this.tasks.isEmpty() || tasks.peek().getServiceTime()==0){
             return "closed";
         }
         return tasks.toString();

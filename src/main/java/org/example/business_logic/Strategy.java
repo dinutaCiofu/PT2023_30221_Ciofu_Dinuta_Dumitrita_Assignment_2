@@ -1,4 +1,4 @@
-package org.example.businessLogic;
+package org.example.business_logic;
 
 import org.example.model.Server;
 import org.example.model.Task;

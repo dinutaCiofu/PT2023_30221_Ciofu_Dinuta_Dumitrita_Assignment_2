@@ -26,10 +26,6 @@ public class Task {
         return arrivalTime;
     }
 
-    public void setArrivalTime(Integer arrivalTime) {
-        this.arrivalTime = arrivalTime;
-    }
-
     public Integer getServiceTime() {
         return serviceTime;
     }

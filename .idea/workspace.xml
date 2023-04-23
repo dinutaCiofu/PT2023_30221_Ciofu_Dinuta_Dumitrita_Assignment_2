@@ -5,25 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c73377b4-0f82-446e-960c-ccc007aa393b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/businessLogic/ConcreteStrategyQueue.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/businessLogic/ConcreteStrategyTime.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/businessLogic/Scheduler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/businessLogic/SelectionPolicy.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/businessLogic/SimulationManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/businessLogic/Strategy.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/model/Server.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/model/Task.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/single_point_access/GUIFrameSinglePointAccess.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/view/UserInterface.form" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/view/UserInterface.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/retention.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/results.txt" beforeDir="false" afterPath="$PROJECT_DIR$/results.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/businessLogic/ConcreteStrategyQueue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/business_logic/ConcreteStrategyQueue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/businessLogic/ConcreteStrategyTime.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/business_logic/ConcreteStrategyTime.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/businessLogic/Scheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/business_logic/Scheduler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/businessLogic/SelectionPolicy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/business_logic/SelectionPolicy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/businessLogic/SimulationManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/business_logic/SimulationManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/businessLogic/Strategy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/business_logic/Strategy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/model/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/model/Server.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/model/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/model/Task.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,17 +53,18 @@
     "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH": "254",
     "WebServerToolWindowFactoryState": "false",
     "last_opened_file_path": "E:/Anul 2/SEM 2/Arhiva/Tema 2 tp/Tema 2 Simulare cozi-20230418T183711Z-001/Tema 2 Simulare cozi",
+    "nodejs_package_manager_path": "npm",
     "run.code.analysis.last.selected.profile": "pProject Default",
     "settings.editor.selected.configurable": "project.propGUI"
   }
 }]]></component>
   <component name="RunManager">
     <configuration name="SimulationManager" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="org.example.businessLogic.SimulationManager" />
+      <option name="MAIN_CLASS_NAME" value="org.example.business_logic.SimulationManager" />
       <module name="Tema2" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.example.businessLogic.*" />
+          <option name="PATTERN" value="org.example.business_logic.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -97,6 +89,7 @@
       <workItem from="1681322364007" duration="3075000" />
       <workItem from="1681843181918" duration="26486000" />
       <workItem from="1682064144096" duration="28402000" />
+      <workItem from="1682266688517" duration="12459000" />
     </task>
     <servers />
   </component>
