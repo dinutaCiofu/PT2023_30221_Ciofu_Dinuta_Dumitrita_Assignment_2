@@ -57,17 +57,24 @@ public class Scheduler {
         Integer minWaitingTime = 999;
 
         for (int i = 0; i < maxNoServers; i++) {
-            if (servers.get(i).getWaitingPeriod() < minWaitingTime) {
-                minWaitingTime = servers.get(i).getWaitingPeriod();
-                minQueueID = i;
-            }
-            if (minWaitingTime == 0) {
-                break;
+            if(servers.size() < maxTasksPerServer-1){
+                if (servers.get(i).getWaitingPeriod() < minWaitingTime) {
+                    minWaitingTime = servers.get(i).getWaitingPeriod();
+                    minQueueID = i;
+
+                }
+                if (minWaitingTime == 0) {
+                    break;
+                }
             }
         }
 
         // adaugam task-ul la serverul cu cel mai mic timp de asteptare
-        servers.get(minQueueID).addTask(t);
+        try {
+            servers.get(minQueueID).addTask(t);
+        }catch (IllegalStateException ex){
+
+        }
         if (servers.get(minQueueID).isOpen() != true) {
             // marcam server-ul ca fiind deschis
             servers.get(minQueueID).setOpen(true);

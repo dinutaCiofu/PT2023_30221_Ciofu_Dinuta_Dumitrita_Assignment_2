@@ -13,7 +13,7 @@ public class Server implements Runnable {
     private Integer waitingTasks = 0;
 
     public Server(Integer ID, Integer N) {
-        this.tasks = new ArrayBlockingQueue<Task>(N);
+        this.tasks = new ArrayBlockingQueue<Task>(N+1);
         this.waitingPeriod = new AtomicInteger(0);
         this.ID = ID;
     }
@@ -27,9 +27,15 @@ public class Server implements Runnable {
     }
 
     public void addTask(Task newTask) {
-        tasks.add(newTask);
-        //increment the waiting period
-        waitingPeriod.set(waitingPeriod.addAndGet(newTask.getServiceTime()));
+        try{
+            tasks.add(newTask);
+            //increment the waiting period
+            waitingPeriod.set(waitingPeriod.addAndGet(newTask.getServiceTime()));
+        }catch (IllegalStateException ex){
+            ex.printStackTrace();
+        }
+
+
 //        System.out.println("LN 40 Server: waitingPeriod is: "+waitingPeriod + " from server "+ this.ID);
 //        System.out.println("The tasks from server "+this.ID + " are: ");
 //        for (Task task : tasks){
